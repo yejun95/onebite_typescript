@@ -14,6 +14,8 @@ num = anyVar; // 다른 타입에 다 넣을 수 있다.
 // 그러나 마지막 타입이 불일치하면 런타임시에 에러가 남
 // 고로 최대한 사용하지 말아야한다.
 
+
+
 // unknown : any와 마찬가지로 어떤 타입이든 넣을 수 있음
 let unknowsVar: unknown;
 unknowsVar = "";
