@@ -246,4 +246,10 @@
 ## ✔️ section6 directory
 - 자바스크립트의 class 문법
 
-- 
+- 타입스크립트의 class 문법
+
+- 접근 제어자
+
+- 인터페이스와 클래스
+  - class에 인터페이스를 implements로 구현
+
