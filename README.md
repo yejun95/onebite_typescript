@@ -269,3 +269,182 @@
 - 제네릭 클래스
 
 - 프로미스 객체와 타입 선언
+<br>
+<hr>
+<br>
+
+## ✔️ section8 - 타입 조작하기
+### 인덱스드 엑세스 타입
+- 선언된 인터페이스 및 타입의 특정 프로퍼티의 타입을 명시 가능
+
+- ex) 함수 생성 시 매개변수의 타입을 특정 타입의 프로퍼티 명시가 가능한 것
+<br>
+<br>
+
+### keyof 연산자
+- 타입을 유니온으로 명시하는 것
+
+```js
+interface Person {
+  name: string;
+  age: number;
+}
+
+// key가 유니온 타입으로 추출된다. name | age | etc | .... 
+function getPropertyKey(person: Person, key: keyof Person) {
+  return person[key];
+}
+
+const person: Person = {
+  name: "홍길동",
+  age: 27,
+};
+```
+> Person 타입이 keyof 연산자로 인해 유니온 추론이 된다.
+<br>
+
+- 이를 통해 타입의 프로퍼티가 증가하여도 추가적인 작업이 불필요하다.
+<br>
+<br>
+
+### Mapped Type
+- type 별칭에서만 사용 가능
+
+- 기존에 선언된 타입에 대한 새로운 추론을 가능하게 함
+
+```js
+type PartialUser = {
+  [key in 'id' | 'name' | 'age']?: User[key];
+}
+
+// 한명의 유저 정보를 수정하는 기능
+function updateuser(user: PartialUser) {
+
+}
+
+// 변경되는 값만 프로퍼티로 보내기
+updateuser({
+  // id: 1,
+  // name: "홍길동",
+  age: 23
+})
+```
+<br>
+
+- 유니온 부분은 `keyof` 연산자를 사용하면 동일하게 추론 가능
+
+- 해당 타입을 통해 특정 프로퍼티만 수정하기 또는 리턴 값을 readonly로 만들기 등 다양한 방식이 가능
+<br>
+<br>
+
+### 템플릿 리터럴 타입
+- 여러 타입에 대한 값을 sql의 카테시안 곱처럼 모든 경우의 수로 만들어줌
+
+```js
+type Color = "red" | "black" | "green";
+
+type Animal = "dog" | "cat" | "chicken";
+
+type ColoredAnimal = `${Color}-${Animal}`
+```
+<br>
+
+![image](https://github.com/user-attachments/assets/47796891-260f-4096-89c4-bdd1700ef77c)
+<br>
+<hr>
+<br>
+
+## ✔️ section9 - 조건부 타입
+### 조건부 타입
+- 삼항 연산자를 통해 선언한 타입이 연산 값에 따라 추론된다.
+
+- 제네릭과 함께 사용하면 특정 타입을 받을 때 어떤 값을 리턴해줄지 결정할 수 있다.
+
+```js
+type A = number extends string ? string : number;
+
+type ObjA = {
+  a: number
+}
+
+type ObjB = {
+  a: number;
+  b: number;
+}
+
+type B = ObjB extends ObjA ? number : string;
+```
+<br>
+<br>
+
+### 분산적인 조건부 타입
+- 조건부 타입에 제네릭을 함께 사용하여 특정 타입만 추론이 가능
+
+```js
+type Exclude<T, U> = T extends U ? never : T;
+
+// never는 사라진다.
+// string 타입이 제외됨
+type A = Exclude<number | string | boolean, string>;
+
+// 이를 통해 특정 타입만 뽑아내기가 가능 -> 원하는 타입의 데이터만 추출 가능 
+```
+<br>
+<br>
+
+### infer
+- 조건부 타입을 항상 참으로 반환하기 위해 자동으로 슈퍼타입이 되는 R을 추론하는 것
+
+- infer 키워드는 extends와 함께 사용
+
+- 항상 조건부 타입에서만 사용 -> 조건부 타입에서도 참일 경우에만 사용이 가능
+
+```js
+type FuncA = () => string;
+
+type FuncB = () => number;
+
+// infer R이 T의 값에 슈퍼타입이 되기 위해 자동으로 추론됨 -> 조건식을 무조건 참으로 만들기 위함
+type ReturnType<T> = T extends () => infer R ? R : never;
+
+type A = ReturnType<FuncA>;
+
+type B = ReturnType<FuncB>;
+
+// R이 추론 불가능하여 거짓이 됨
+type C = ReturnType<number>;
+```
+<br>
+<hr>
+<br>
+
+## ✔️ section10 - 유틸리티 타입
+![image](https://github.com/user-attachments/assets/34ab3b3d-dd3c-4bf5-bc8e-34344fad3cca)
+<br>
+
+### Mapped 타입 기반의 유틸리티 타입 - 1
+- Partial<T> : 선택적 프로퍼티로 만들어줌
+
+- Required<T> : 필수 프로퍼티로 만들어줌
+
+- Readonly<T> : 값이 변경 불가능하게 만들어줌
+<br>
+<br>
+
+### Mapped 타입 기반의 유틸리티 타입 - 2
+- Pick<T, K> : 필요한 타입만 선택
+
+- Omit<T, K> : 필요 없는 타입 제외
+
+- Record<K, V> : 인덱스 시그니처와 비슷하게 객체에 대한 중복 값 설정 시 유연
+<br>
+<br>
+
+### 조건부 타입의 유틸리티 타입
+- 기본적으로 `extends`를 통해 서브 타입인지 체크
+
+- Exclude<T, U> : T에서 U를 제거
+
+- Extract<T, U> : T에서 U를 추출
+
+- ReturnType<T> : 함수의 리턴값을 반환
