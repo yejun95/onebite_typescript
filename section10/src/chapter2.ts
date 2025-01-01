@@ -50,5 +50,9 @@ type ThumbnailLegacy = {
   },
 }
 
-// ThumbnailLegacy와 동일한 코드 -> 인덱스 시그니처와 비슷하지만 조금은 강제적이다 
+type Record<K extends keyof any, V> = {
+  [key in K]: V
+}
+
+// ThumbnailLegacy와 동일한 코드 -> 인덱스 시그니처와 비슷하지만 덜 유연하다.
 type Thumbnail = Record<"large" | "medium" | "small", { url: string }>;
