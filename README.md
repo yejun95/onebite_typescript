@@ -448,3 +448,34 @@ type C = ReturnType<number>;
 - Extract<T, U> : T에서 U를 추출
 
 - ReturnType<T> : 함수의 리턴값을 반환
+<br>
+<hr>
+<br>
+
+## ✔️ section11 - 타입스크립트 리액트 시작하기
+- 리액트 프로젝트가 생성되었다는 가정하에 시작 : `npx create-react app .`
+
+- 타입스크립트 적용 순서
+  - 타입선언 : `npm i @types/node @types/react @types/react-dom @types/jest`
+<br>
+
+- tsconfig.json 파일 생성
+
+```json
+{
+  "compilerOptions": {
+    "target": "ES5",
+    "module": "CommonJS",
+    "strict": true,
+    "allowJs": true,
+    "esModuleInterop": true, // import된 모듈의 export exfault가 없다면 자동으로 해줌
+    "jsx": "react-jsx" // jsx 파일을 인식하기 위함
+  },
+  "include": ["src"]
+}
+```
+<br>
+
+- 모든 js -> jsx 변환
+
+- jsx 파일을 1개씩 tsx로 변경하여 에러 해결
